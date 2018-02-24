@@ -55,7 +55,9 @@ function askUser(){
         }else if(product.quantity>parseInt(response[0].stock)){ 
           console.log("\nInsufficient quantity to fulfil your demands.Please choose a different amount\n");
         }else{
-          console.log("\nYou bought "+response[0].product+", Nice doing business with you\n");
+          console.log("\nYou bought "+product.quantity+" "+response[0].product);
+          console.log("Your cost is $"+parseFloat(response[0].price)*product.quantity);
+          console.log("Nice doing business with you\n");
           newStock = parseInt(response[0].stock) - product.quantity;
           updateProduct(response[0].id, newStock);
         }
