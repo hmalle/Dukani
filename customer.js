@@ -15,7 +15,7 @@ connection.connect(function(error){
   if(error) {
     return console.log("Connection error " +error);
   }else{
-    console.log("Connected , id "+connection.threadId+"\n");
+    //console.log("Connected , id "+connection.threadId+"\n");
     var queryString = "SELECT * FROM products";
     displayItems(queryString);
   }
@@ -64,8 +64,9 @@ function askUser(){
       }else{
         return console.log(error);
       }
-      queryString = "SELECT * FROM products"; 
-      displayItems(queryString);
+      //queryString = "SELECT * FROM products"; 
+      //displayItems(queryString);
+      connection.end();
     });
   });
 }
