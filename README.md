@@ -1,8 +1,8 @@
 # Dukani aka The Shop
 
-###A simple store manager tying to make a difference! 
+### A simple store manager tying to make a difference! 
 ---
-##Requirements;
+## Requirements;
 ```
   mysql
   node
@@ -10,7 +10,7 @@
 ```
 ---
 
-###How to use!
+### How to use!
 
 Clone the repository and install necessary packages through your terminal/bash
 ```
