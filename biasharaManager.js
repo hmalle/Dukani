@@ -21,12 +21,41 @@ connection.connect(function(error){
 });
 
 function lowInventory(){
+  //view rows with low inventory
+  queryString = "SELECT * FROM products WHERE stock<5;";
+  connection.query(queryString,function(error,response){
+    if(error){
+      return console.log("lowInventory: "+error);
+    }else{
+      console.log(response);
+    }
+  });
 }
 
 function replenishStock(){
+  // add more stock to any product
+  var questions=[
+    {
+      name:"product_id",
+      message:"Enter the product id you want to replenish its stock"
+    },{
+      name:"newStock",
+      message:"Whats the count of your new stock"
+    }
+  ];
+  inquirer.prompt(questions).then(function(answers){
+    var queryString = "UPDATE products SET stock='"+answers.newStock+"' WHERE id='"+answers.productId+"';";
+    connection.query(queryString, function(error, response){
+      if(error){
+        return console.log("replenishStock:"+error);
+      }else{
+        console.log( response);
+      }
+    });
+  });
 }
 
-function addNewItem(){
+function addNewProduct(){
   console.log("You are about to add a new item to the store inventory!");
   var questions=[
     {
@@ -45,7 +74,6 @@ function addNewItem(){
     inquirer.prompt(questions).then(function(answers){
       var queryString = "INSERT INTO  products(product, department, price, stock) "
       queryString+= "VALUES('"+anwers.product+','+answers.department+','+answers.price+","+answers.quantity+,'"';
-      console.log(queryString);//TODO: delete this
       connection.query(queryString,function(error,response){
         if(error){
           return console.log(error);
@@ -80,7 +108,7 @@ function askManager(){
         replenishStock();
         break;
       case "4":
-        addNewItem();
+        addNewProduct();
         break;
       //default //Not needed since we are getting a selection
     }
