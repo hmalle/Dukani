@@ -36,7 +36,7 @@ function replenishStock(){
   // add more stock to any product
   var questions=[
     {
-      name:"product_id",
+      name:"productId",
       message:"Enter the product id you want to replenish its stock"
     },{
       name:"newStock",
@@ -44,14 +44,7 @@ function replenishStock(){
     }
   ];
   inquirer.prompt(questions).then(function(answers){
-    var queryString = "UPDATE products SET stock='"+answers.newStock+"' WHERE id='"+answers.productId+"';";
-    connection.query(queryString, function(error, response){
-      if(error){
-        return console.log("replenishStock:"+error);
-      }else{
-        console.log( response);
-      }
-    });
+    updateProduct(answers.productId, answers.newStock);
   });
 }
 
@@ -70,18 +63,39 @@ function addNewProduct(){
     },{
       name:"quantity",
       message:"Enter the quantity of the new item"
-    }];
-    inquirer.prompt(questions).then(function(answers){
-      var queryString = "INSERT INTO  products(product, department, price, stock) "
-      queryString+= "VALUES('"+anwers.product+','+answers.department+','+answers.price+","+answers.quantity+,'"';
-      connection.query(queryString,function(error,response){
-        if(error){
-          return console.log(error);
-        }else{
-          console.log("Item added to the database");
-        }
-      });
+  }];
+  inquirer.prompt(questions).then(function(answers){
+    var queryString = "INSERT INTO  products(product, department, price, stock) "
+    queryString+= "VALUES('"+anwers.product+','+answers.department+','+answers.price+","+answers.quantity+'"';
+    connection.query(queryString,function(error,response){
+      if(error){
+        return console.log(error);
+      }else{
+        console.log("Item added to the database");
+      }
     });
+  });
+}
+
+function updateProduct(id,newStock){
+  var queryString = "UPDATE products SET stock="+newStock+" WHERE id="+id;
+  connection.query(queryString,function(error, response){
+    if(error){ 
+      return console.log(error);
+    }
+  });
+}
+
+function displayItems( queryString ){
+  //display items based on the query supplied! 
+  connection.query( queryString, function(error,res){
+    if(error){
+      console.log(error);
+    }else{
+      console.log(columnify(res));
+    }
+    console.log("-------------------------------------------------------------------------------");
+  });
 }
 
 
@@ -115,24 +129,4 @@ function askManager(){
   });
 }
 
-function updateProduct(id,newStock){
-  var queryString = "UPDATE products SET stock="+newStock+" WHERE id="+id;
-  connection.query(queryString,function(error, response){
-    if(error){ 
-      return console.log(error);
-    }
-  });
-}
-
-function displayItems( queryString ){
-  //display items based on the query supplied! 
-  connection.query( queryString, function(error,res){
-    if(error){
-      console.log(error);
-    }else{
-      console.log(columnify(res));
-    }
-    console.log("-------------------------------------------------------------------------------");
-  });
-}
 
