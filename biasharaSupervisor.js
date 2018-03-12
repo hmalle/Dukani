@@ -79,3 +79,4 @@ function updateProduct(id,newStock){
     }
   });
 }
+
