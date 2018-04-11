@@ -18,5 +18,7 @@ CREATE TABLE products (
 CREATE TABLE departments(
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   department_name VARCHAR(100) NOT NULL,
-  over_head_costs INT NOT NULL DEFAULT 100
+  over_head_costs INT NOT NULL DEFAULT 100,
+  product_sales INT NULL,
+  total_profit INT NULL
 );

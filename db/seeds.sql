@@ -8,3 +8,9 @@ INSERT INTO  products(product, department, price, stock) VALUES
 ("Instant Pot", "Kitchen", 99.00,10),
 ("Warehouse 13", "Movies", 43.99,122),
 ("Scrimmage Soccer Vest", "Sports", 28.50,48);
+
+
+INSERT INTO departments(department_name,over_head_costs,product_sales,total_profit) VALUES
+("Electronics",888,2332,42323.89),
+("Kitchen",23,10,232.89);
+
