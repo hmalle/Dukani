@@ -31,18 +31,32 @@ function displayItems( queryString ){
       console.log(columnify(res));
     }
     console.log("-------------------------------------------------------------------------------");
-    askUser();
+    askSupervisor();
   });
 }
 
 function createNewDepartment(){
   var question = [{
-    type: "text",
     name: "newDepartment",
     message: "Enter the name of the new dapartment"
   }];
   inquirer.prompt(question).then(function(answer){
-    console.log(JSON.stringify(answer));
+    if(answer.newDepartment.length>=2){
+      var queryString = "INSERT INTO departments(department_name,over_head_costs,product_sales,total_profit)";
+      queryString+=answer.newDartment+"2323,432,23234)";
+      connection.query(queryString,function(err,res){
+        if(err){
+          console.log(err);
+        }else{
+          console.log(columnify(res));
+        }
+        console.log("-------------------------------------------------------------------------------");
+        askSupervisor();
+      }
+    }else{
+      console.log("You didnt enter a valid department name");
+      askSupervisor();
+    }
   })
 }
 
