@@ -45,28 +45,7 @@ function askUser(){
     message: "How many do you want ?"
   }];
   inquirer.prompt(questions).then( function(product){
-    //console.log(JSON.stringify(product));
-    var queryString = "SELECT * FROM products WHERE id="+ product.id;
-    var newStock=0;
-    connection.query(queryString, function(error, response){
-      if(!error){
-        if( parseInt(response[0].stock)<= 0 ){
-          console.log("\nThe "+response[0].product+" is out of stock! Please check again later\n");
-        }else if(product.quantity>parseInt(response[0].stock)){ 
-          console.log("\nInsufficient quantity to fulfil your demands.Please choose a different amount\n");
-        }else{
-          console.log("\nYou bought "+product.quantity+" "+response[0].product);
-          console.log("Your cost is $"+parseFloat(response[0].price)*product.quantity);
-          console.log("Nice doing business with you\n");
-          newStock = parseInt(response[0].stock) - product.quantity;
-          updateProduct(response[0].id, newStock);
-        }
-      }else{
-        return console.log(error);
-      }
-      //queryString = "SELECT * FROM products"; 
-      //displayItems(queryString);
-      connection.end();
+
     });
   });
 }
