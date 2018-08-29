@@ -18,6 +18,7 @@ connection.connect(function(error){
     //console.log("Connected , id "+connection.threadId+"\n");
     var queryString = "SELECT * FROM products";
     displayItems(queryString);
+    askSupervisor();
   }
 });
 
@@ -30,53 +31,56 @@ function displayItems( queryString ){
       console.log(columnify(res));
     }
     console.log("-------------------------------------------------------------------------------");
-    askUser();
+    askSupervisor();
   });
 }
 
-function askUser(){
+function createNewDepartment(){
+  var question = [{
+    name: "newDepartment",
+    message: "Enter the name of the new dapartment"
+  }];
+  inquirer.prompt(question).then(function(answer){
+    if(answer.newDepartment.length>=2){
+      var queryString = "INSERT INTO departments(department_name,over_head_costs,product_sales,total_profit)";
+      queryString+=answer.newDartment+"2323,432,23234)";
+      connection.query(queryString,function(err,res){
+        if(err){
+          console.log(err);
+        }else{
+          console.log(columnify(res));
+        }
+        console.log("-------------------------------------------------------------------------------");
+        askSupervisor();
+      }
+    }else{
+      console.log("You didnt enter a valid department name");
+      askSupervisor();
+    }
+  })
+}
+
+function askSupervisor(){
   //prompts the user to enter the id of the item and the quantity to buy! 
   var questions = [
   {
-    name: "id",
-    message: "Enter the id of the product you would like to buy"
-  },{
-    name: "quantity",
-    message: "How many do you want ?"
+    type: "list",
+    name: "option",
+    message: "Choose what action to perform",
+    choices: ["1: View Products by Department","2: Create New Department"]
   }];
-  inquirer.prompt(questions).then( function(product){
-    //console.log(JSON.stringify(product));
-    var queryString = "SELECT * FROM products WHERE id="+ product.id;
-    var newStock=0;
-    connection.query(queryString, function(error, response){
-      if(!error){
-        if( parseInt(response[0].stock)<= 0 ){
-          console.log("\nThe "+response[0].product+" is out of stock! Please check again later\n");
-        }else if(product.quantity>parseInt(response[0].stock)){ 
-          console.log("\nInsufficient quantity to fulfil your demands.Please choose a different amount\n");
-        }else{
-          console.log("\nYou bought "+product.quantity+" "+response[0].product);
-          console.log("Your cost is $"+parseFloat(response[0].price)*product.quantity);
-          console.log("Nice doing business with you\n");
-          newStock = parseInt(response[0].stock) - product.quantity;
-          updateProduct(response[0].id, newStock);
-        }
-      }else{
-        return console.log(error);
-      }
-      //queryString = "SELECT * FROM products"; 
-      //displayItems(queryString);
-      connection.end();
-    });
-  });
-}
-
-function updateProduct(id,newStock){
-  var queryString = "UPDATE products SET stock="+newStock+" WHERE id="+id;
-  connection.query(queryString,function(error, response){
-    if(error){ 
-      return console.log(error);
+  inquirer.prompt(questions).then( function(answers){
+    console.log(JSON.stringify(answers));
+    switch(answers.option.charAt(0)){
+      case "1":
+        displayItems("SELECT * FROM departments");
+        break;
+      case "2":
+        createNewDepartment();
+        break;
+      //default //Not needed since we are getting a selection
     }
   });
 }
+
 

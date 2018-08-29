@@ -97,8 +97,6 @@ function displayItems( queryString ){
   });
 }
 
-
-
 function askManager(){
   //prompts the user to enter the id of the item and the quantity to buy! 
   var questions = [
