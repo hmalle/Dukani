@@ -50,8 +50,7 @@ function replenishStock(){
 
 function addNewProduct(){
   console.log("You are about to add a new item to the store inventory!");
-  var questions=[
-    {
+  var questions=[{
       name:"product",
       message:"Enter the name of the product",
     },{

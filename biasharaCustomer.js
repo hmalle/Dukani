@@ -29,8 +29,23 @@ function displayItems( queryString ){
     }else{
       console.log(columnify(res));
     }
-    console.log("-------------------------------------------------------------------------------");
-    askUser();
+    console.log("------------------------------------------------------------------------");
+    //Ask the customer if they would like to make a purchase;
+    var questions = [{
+      name: "purchase",
+      message: "Would you like to make a purchase?",
+      type : "list",
+      choices:["Yes","No"]
+    }];
+    inquirer.prompt(questions).then(function(ans){
+      console.log(JSON.stringify(ans));
+      if(ans.purchase == "Yes"){
+        askUser();
+      }else{
+        console.log("Thank you for doing businees");
+        connection.end();
+      }
+    });
   });
 }
 
@@ -45,29 +60,34 @@ function askUser(){
     message: "How many do you want ?"
   }];
   inquirer.prompt(questions).then( function(product){
-    //console.log(JSON.stringify(product));
-    var queryString = "SELECT * FROM products WHERE id="+ product.id;
-    var newStock=0;
-    connection.query(queryString, function(error, response){
-      if(!error){
-        if( parseInt(response[0].stock)<= 0 ){
-          console.log("\nThe "+response[0].product+" is out of stock! Please check again later\n");
-        }else if(product.quantity>parseInt(response[0].stock)){ 
-          console.log("\nInsufficient quantity to fulfil your demands.Please choose a different amount\n");
+    //console.log("Product is "+JSON.stringify(product));
+    if(product.id!="" && product.quantity!=""){
+      var queryString = "SELECT * FROM products WHERE id="+ product.id;
+      var newStock=0;
+      connection.query(queryString, function(error, response){
+        if(!error){
+          if( parseInt(response[0].stock)<= 0 ){
+            console.log("\nThe "+response[0].product+" is out of stock! Please check again later\n");
+          }else if(product.quantity>parseInt(response[0].stock)){ 
+            console.log("\nInsufficient quantity to fulfil your demands.Please choose a different amount\n");
+          }else{
+            console.log("\nYou bought "+product.quantity+" "+response[0].product);
+            console.log("Your cost is $"+parseFloat(response[0].price)*product.quantity);
+            console.log("Nice doing business with you\n");
+            newStock = parseInt(response[0].stock) - product.quantity;
+            updateProduct(response[0].id, newStock);
+          }
         }else{
-          console.log("\nYou bought "+product.quantity+" "+response[0].product);
-          console.log("Your cost is $"+parseFloat(response[0].price)*product.quantity);
-          console.log("Nice doing business with you\n");
-          newStock = parseInt(response[0].stock) - product.quantity;
-          updateProduct(response[0].id, newStock);
+          return console.log(error);
         }
-      }else{
-        return console.log(error);
-      }
-      //queryString = "SELECT * FROM products"; 
-      //displayItems(queryString);
+        //queryString = "SELECT * FROM products"; 
+        //displayItems(queryString);
+        connection.end();
+      });
+    }else{
+      console.log("Please select an item and the quantity");
       connection.end();
-    });
+    }
   });
 }
 
@@ -79,3 +99,4 @@ function updateProduct(id,newStock){
     }
   });
 }
+
